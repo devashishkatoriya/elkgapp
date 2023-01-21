@@ -6,7 +6,7 @@ Helper file containing utility functions for processing user query
 This file is used by H_process_query.py
 """
 
-import logging
+from logging import info, warning
 
 # ---------------------------------------------
 
@@ -17,7 +17,7 @@ def read_dicts(data, val):
     Function to read curr_table for given predicate.
     """
 
-    logging.info('Reading current table for %s', str(val))
+    info('Reading current table for %s', str(val))
 
     # val == data for which predicate to select
     sub = data[val][0]
@@ -27,103 +27,95 @@ def read_dicts(data, val):
     pred2 = data[val][4]
     pred31 = data[val][5]
     pred32 = data[val][6]
-    pred4 = data[val][7]
-    uid2 = data[val][8]
+    uid2 = data[val][7]
 
-    logging.info('Reading done.')
-    return sub, obj, uid, pred1, pred2, pred31, pred32, pred4, uid2
+    info('Reading done.')
+    return sub, obj, uid, pred1, pred2, pred31, pred32, uid2
 
 
 # Function to prepare display for result
-def prepare_display(selects, var, disp, res_s, res_o, res_u, res_p1, res_p2, res_p31, res_p32, res_p4, res_u2, res_pred):
+def prepare_display(selects, var, disp, res_s, res_o, res_u, res_p1, res_p2, res_p31, res_p32, res_u2, res_pred):
     """
     Function to prepare display for result using var[] and disp[]
     """
-    logging.info('At prepare_display()')
+    info('At prepare_display()')
 
     temp1 = dict()
 
     for i in range(1, len(selects)):
         #print(selects[i]+'...')
-        logging.info('Currently processing: %s', str(selects[i]))
+        info('Currently processing: %s', str(selects[i]))
 
         k1 = selects[i].strip('?')
 
         temp1[k1] = []
 
         if k1 in var['sub']:
-            logging.info('Found it in var_sub.')
+            info('Found it in var_sub.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_s:
                     temp1[k1].append(ele)
 
         elif k1 in var['obj']:
-            logging.info('Found it in var_obj.')
+            info('Found it in var_obj.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_o:
                     temp1[k1].append(ele)
 
         elif k1 in var['uid']:
-            logging.info('Found it in var_uid.')
+            info('Found it in var_uid.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_u:
                     temp1[k1].append(ele)
 
         elif k1 in var['pred1']:
-            logging.info('Found it in var_pred1.')
+            info('Found it in var_pred1.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_p1:
                     temp1[k1].append(ele)
 
         elif k1 in var['pred2']:
-            logging.info('Found it in var_pred2.')
+            info('Found it in var_pred2.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_p2:
                     temp1[k1].append(ele)
 
         elif k1 in var['pred31']:
-            logging.info('Found it in var_pred31.')
+            info('Found it in var_pred31.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_p31:
                     temp1[k1].append(ele)
 
         elif k1 in var['pred32']:
-            logging.info('Found it in var_pred32.')
+            info('Found it in var_pred32.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_p32:
                     temp1[k1].append(ele)
 
-        elif k1 in var['pred4']:
-            logging.info('Found it in var_pred4.')
-            temp1.setdefault(k1, [])
-            for ele in disp[k1]:
-                if ele in res_p4:
-                    temp1[k1].append(ele)
-
         elif k1 in var['uid2']:
-            logging.info('Found k1 in var_uid2.')
+            info('Found k1 in var_uid2.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_u2:
                     temp1[k1].append(ele)
 
         elif k1 in var['pred']:
-            logging.info('Found it in var_pred.')
+            info('Found it in var_pred.')
             temp1.setdefault(k1, [])
             for ele in disp[k1]:
                 if ele in res_pred:
                     temp1[k1].append(ele)
         else:
-            logging.warning('Unknown SELECT variable.')
+            warning('Unknown SELECT variable.')
 
-    logging.info('Preparing display done.')
+    info('Preparing display done.')
     return temp1
 
 
@@ -133,7 +125,7 @@ def intersect_pred(res_s, res_o, res_pred, pred):
     Function used to match res_table based on curr_pred_table
     """
 
-    logging.info('Matching pred with res_pred...')
+    info('Matching pred with res_pred...')
 
     to_remove = []
     for key1 in res_pred:
@@ -164,7 +156,7 @@ def intersect_pred(res_s, res_o, res_pred, pred):
         res_pred.pop(key, None)
 
 
-    logging.info('Matching done.')
+    info('Matching done.')
 
     return res_s, res_o, res_pred
 
@@ -175,7 +167,7 @@ def trim_dict(res_s, res_o, dict1):
     Function used remove unnecessary triples from param_dict using res_table
     """
 
-    logging.info('Trimming parameter dict...')
+    info('Trimming parameter dict...')
 
     # Create new empty dict
     new_dict = dict()
@@ -202,7 +194,7 @@ def trim_dict(res_s, res_o, dict1):
     # Replace old dict with new_dict
     dict1 = new_dict
 
-    logging.info('Trimmed.')
+    info('Trimmed.')
     return dict1
 
 
@@ -212,7 +204,7 @@ def match_predicate(res_s, res_o, res_pred, curr_pred):
     Function used take intersection of res_pred and current table
     """
 
-    logging.info('Matching res_pred with curr_pred...')
+    info('Matching res_pred with curr_pred...')
 
     to_remove = []
 
@@ -238,14 +230,14 @@ def match_predicate(res_s, res_o, res_pred, curr_pred):
     for p1 in to_remove:
         res_pred.pop(p1)
 
-    logging.info('Matched.')
+    info('Matched.')
     return res_pred
 
 
 # Function to create dictionaries for all variable
 def createDictsForAll(data):
 
-    logging.info('Creating dicts for all predicates...')
+    info('Creating dicts for all predicates...')
 
     sub = dict()
     obj = dict()
@@ -278,7 +270,7 @@ def createDictsForAll(data):
                     curr_pred[val] = dict()
                     curr_pred[val][s1] = o1
 
-    logging.info('Dictionaries created.')
+    info('Dictionaries created.')
 
     return sub, obj, uid, pred1, pred2, pred31, pred32, pred4, uid2, curr_pred
 
@@ -289,7 +281,7 @@ def matchParameter(res_s, res_o, dict1, param1):
     Function used to match S, O & Param with param
     """
 
-    logging.info('At matchParameter()...')
+    info('At matchParameter()...')
 
     # Create temp_res_table for storing triples
     temp_sub = dict()
@@ -322,7 +314,7 @@ def matchParameter(res_s, res_o, dict1, param1):
     res_s = temp_sub
     res_o = temp_obj
 
-    logging.info('Matched.')
+    info('Matched.')
 
     return res_s, res_o
 
@@ -333,7 +325,7 @@ def matchObject(res_s, res_o, res_u, o1):
     Function used when only object is given subject is variable
     """
 
-    logging.info('At matchObject()...')
+    info('At matchObject()...')
 
     res_s = dict()
     res_u = dict()
@@ -367,7 +359,7 @@ def matchObject(res_s, res_o, res_u, o1):
         # Else empty all res_tables
         res_o = dict()
 
-    logging.info('Matched.')
+    info('Matched.')
 
     return res_s, res_o, res_u
 
@@ -378,7 +370,7 @@ def matchSubject(res_s, res_o, res_u, s1):
     Function used when only subject is given object is variable
     """
 
-    logging.info('At matchSubject()...')
+    info('At matchSubject()...')
 
     res_o = dict()
     res_u = dict()
@@ -412,7 +404,7 @@ def matchSubject(res_s, res_o, res_u, s1):
         # empty all res_tables
         res_s = dict()
 
-    logging.info('Matched.')
+    info('Matched.')
 
     return res_s, res_o, res_u
 
@@ -423,7 +415,7 @@ def matchUID(res_s, res_o, res_u, u1):
     Function used when UID is given
     """
 
-    logging.info('At matchUID()...')
+    info('At matchUID()...')
 
     res_s = dict()
     res_o = dict()
@@ -457,7 +449,7 @@ def matchUID(res_s, res_o, res_u, u1):
         # empty all res_tables
         res_u = dict()
 
-    logging.info('Matched.')
+    info('Matched.')
 
     return res_s, res_o, res_u
 
@@ -468,7 +460,7 @@ def matchBoth(res_s, res_o, s1, o1):
     Function used when both subject and object are given
     """
 
-    logging.info('At matchBoth()...')
+    info('At matchBoth()...')
 
     # Create empty dicts
     sub = dict()
@@ -489,7 +481,7 @@ def matchBoth(res_s, res_o, s1, o1):
         uid[val4] = dict()
         uid[val4][s1] = o1
 
-    logging.info('Matched.')
+    info('Matched.')
 
     return sub, obj, uid
 
@@ -501,19 +493,19 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
     Function used to match S, O & U with given s, o or u
     """
 
-    logging.info('At matchXYZ()')
-    logging.info('Got pos1: %d', int(pos))
-    logging.info('Got pos2: %d', int(pos2))
+    info('At matchXYZ()')
+    info('Got pos1: %d', int(pos))
+    info('Got pos2: %d', int(pos2))
 
     if pos == 1:
-        logging.info('Matching xyz with res_s')
+        info('Matching xyz with res_s')
         to_remove = []
         to_append = []
         if pos2 == 1:
-            logging.info('Found xyz as sub')
+            info('Found xyz as sub')
             sub = xyz
 
-            logging.info('New subject matching with previous subject...')
+            info('New subject matching with previous subject...')
             to_remove = []
             to_append = []
             for val1 in res_s:
@@ -562,13 +554,13 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_o[val3].pop(val1)
                 res_s.pop(val1)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         elif pos2 == 2:
-            logging.info('Found xyz as obj')
+            info('Found xyz as obj')
             obj = xyz
 
-            logging.info('New object matching with previous subject...')
+            info('New object matching with previous subject...')
             to_remove = []
             to_append = []
             for val1 in res_s:
@@ -618,13 +610,13 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_o[val3].pop(val1)
                 res_s.pop(val1)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         elif pos2 == 3:
-            logging.info('Found xyz as uid')
+            info('Found xyz as uid')
             uid = xyz
 
-            logging.info('New uid matching with previous subject...')
+            info('New uid matching with previous subject...')
             to_remove = []
             to_append = []
             for val1 in res_s:
@@ -674,18 +666,18 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_o[val3].pop(val1)
                 res_s.pop(val1)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         else:
-            logging.warning('Unknown pos2. Check function call')
+            warning('Unknown pos2. Check function call')
 
     elif pos == 2:
-        logging.info('Matching xyz with res_o')
+        info('Matching xyz with res_o')
         if pos2 == 1:
-            logging.info('Found xyz as sub')
+            info('Found xyz as sub')
             sub = xyz
 
-            logging.info('New subject matching with previous object...')
+            info('New subject matching with previous object...')
             to_remove = []
             to_append = []
             for val3 in res_o:
@@ -736,13 +728,13 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_u[val4].pop(val11)
                 res_o.pop(val3)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         elif pos2 == 2:
-            logging.info('Found xyz as obj')
+            info('Found xyz as obj')
             obj = xyz
 
-            logging.info('New object matching with previous object...')
+            info('New object matching with previous object...')
             to_remove = []
             to_append = []
             for val3 in res_o:
@@ -793,13 +785,13 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_u[val4].pop(val11)
                 res_o.pop(val3)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         elif pos2 == 3:
-            logging.info('Found xyz as uid')
+            info('Found xyz as uid')
             uid = xyz
 
-            logging.info('New UID matching with previous object...')
+            info('New UID matching with previous object...')
             to_remove = []
             to_append = []
             for val3 in res_o:
@@ -850,19 +842,19 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_u[val4].pop(val11)
                 res_o.pop(val3)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         else:
-            logging.warning('Unknown pos2. Check function call')
+            warning('Unknown pos2. Check function call')
 
     elif pos == 3:
-        logging.info('Matching xyz with res_u')
+        info('Matching xyz with res_u')
 
         if pos2 == 1:
-            logging.info('Found xyz as sub')
+            info('Found xyz as sub')
             sub = xyz
 
-            logging.info('New subject matches with previous UID...')
+            info('New subject matches with previous UID...')
             to_remove = []
             to_append = []
             for val4 in res_u:
@@ -912,13 +904,13 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_o[val3].pop(val1)
                 res_u.pop(val4)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         elif pos2 == 2:
-            logging.info('Found xyz as obj')
+            info('Found xyz as obj')
             obj = xyz
 
-            logging.info('New object matching with previous UID...')
+            info('New object matching with previous UID...')
             to_remove = []
             to_append = []
             for val4 in res_u:
@@ -968,13 +960,13 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_o[val3].pop(val1)
                 res_u.pop(val4)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         elif pos2 == 3:
-            logging.info('Found xyz as uid')
+            info('Found xyz as uid')
             uid = xyz
 
-            logging.info('New UID matching with previous UID...')
+            info('New UID matching with previous UID...')
             to_remove = []
             to_append = []
             for val4 in res_u:
@@ -1024,13 +1016,13 @@ def matchXYZ(res_s, res_o, res_u, pos, xyz, pos2):
                     res_o[val3].pop(val1)
                 res_u.pop(val4)
 
-            logging.info('Matched.')
+            info('Matched.')
 
         else:
-            logging.warning('Unmatched pos2. Check function call')
+            warning('Unmatched pos2. Check function call')
 
     else:
-        logging.warning('Unmatched pos. Check function call')
+        warning('Unmatched pos. Check function call')
 
     return res_s, res_o, res_u
 
@@ -1041,10 +1033,10 @@ def add_vars_dict(dict1, var, values):
     Function used to add given var.keys() to display dict
     """
 
-    logging.info('Adding %s.keys to display...', str(var))
+    info('Adding %s.keys to display...', str(var))
     if var not in dict1:
         dict1[var] = list(values.keys())
     else:
         dict1[var] = dict1[var] + list(values.keys())
-    logging.info('Added.')
+    info('Added.')
     return dict1

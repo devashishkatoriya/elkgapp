@@ -4,6 +4,7 @@
 import msgpack
 import time
 import json
+from tqdm import tqdm
 
 
 # --------------------------------------
@@ -19,7 +20,7 @@ def read_data(filename):
     Returns:
         data {dict()} -- dictionary inside the file
     """
-    with open('./' + filename, 'r') as file:
+    with open(filename, 'r') as file:
         data = json.load(file)
     file.close()
 
@@ -27,7 +28,7 @@ def read_data(filename):
 
 
 # Main Function
-def main(filename, index_file="./output_files/index3.msgpack", r_index_file = "./output_files/index3r.msgpack"):
+def main(data, index_file="./output_files/index3.msgpack", r_index_file = "./output_files/index3r.msgpack"):
     """Main Function to compress JSON file
     Creates an index file for future uncompression use
 
@@ -43,7 +44,7 @@ def main(filename, index_file="./output_files/index3.msgpack", r_index_file = ".
     print('Compressing data...')
     cnt = 3000
 
-    t1 = time.perf_counter()
+    t1 = time.process_time()
 
     # Index dict
     matrix = dict()
@@ -52,18 +53,18 @@ def main(filename, index_file="./output_files/index3.msgpack", r_index_file = ".
     matrix2 = dict()
 
     # Read original data from JSON file
-    data = read_data(filename)
+    #data = read_data(filename)
 
     # Progress Counter
     i = 0
 
     # Iterate over every string
-    for key in data:
+    for key in tqdm(data):
         for ele in data[key]:
 
-            if i % 10000 == 0:
-                print(i)
-            i = i + 1
+            '''if i % 10000 == 0:
+                #print(i)
+            i = i + 1'''
 
             ele[0] = ele[0].strip()
             if ele[0] not in matrix:
@@ -110,7 +111,7 @@ def main(filename, index_file="./output_files/index3.msgpack", r_index_file = ".
         packed = msgpack.packb(matrix)
         outfile.write(packed)
 
-    t2 = time.perf_counter()
+    t2 = time.process_time()
 
     print('Done!')
     print('Time taken for compressing:', (t2-t1))
